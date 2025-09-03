@@ -22,8 +22,8 @@ export class Car {
     private model: string;
     private scene: THREE.Scene;
     private physicsWorld: PhysicsWorld;
-    private mesh: THREE.Group;
-    private body: CANNON.Body;
+    private mesh!: THREE.Group;
+    private body!: CANNON.Body;
     private stats: CarStats;
     private nitroAmount = 100;
     private maxNitro = 100;

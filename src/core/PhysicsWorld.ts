@@ -15,7 +15,10 @@ export class PhysicsWorld {
     private setupWorld() {
         // Setup collision detection
         this.world.broadphase = new CANNON.NaiveBroadphase();
-        this.world.solver.iterations = 10;
+        // Set solver iterations (cannon-es uses different API)
+        if ('iterations' in this.world.solver) {
+            (this.world.solver as any).iterations = 10;
+        }
         
         // Create materials
         const groundMaterial = new CANNON.Material('ground');

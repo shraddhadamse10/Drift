@@ -249,98 +249,20 @@ export class EffectsManager {
         });
     }
 
-    update(deltaTime: number) {
-        if (!this.target) return;
-
-        const carPosition = this.target.getPosition();
-        const carRotation = this.target.getRotation();
-        const carVelocity = this.target.getVelocity();
+    cleanup() {
+        // Clean up all effects
+        this.particleSystems.forEach(system => {
+            this.scene.remove(system);
+        });
+        this.explosions.forEach(explosion => {
+            this.scene.remove(explosion);
+        });
+        this.nitroTrails.forEach(trail => {
+            this.scene.remove(trail);
+        });
         
-        switch (this.currentMode) {
-            case 'chase':
-                this.updateChaseCamera(carPosition, carRotation, carVelocity, deltaTime);
-                break;
-            case 'cockpit':
-                this.updateCockpitCamera(carPosition, carRotation);
-                break;
-            case 'cinematic':
-                this.updateCinematicCamera(carPosition, carRotation, deltaTime);
-                break;
-            case 'overhead':
-                this.updateOverheadCamera(carPosition);
-                break;
-        }
-        
-        // Apply camera shake if present
-        if (this.shakeIntensity > 0) {
-            const shake = new THREE.Vector3(
-                (Math.random() - 0.5) * this.shakeIntensity,
-                (Math.random() - 0.5) * this.shakeIntensity,
-                (Math.random() - 0.5) * this.shakeIntensity
-            );
-            this.camera.position.add(shake);
-            this.shakeIntensity *= this.shakeDecay;
-        }
-    }
-
-    private updateChaseCamera(carPosition: THREE.Vector3, carRotation: THREE.Quaternion, carVelocity: THREE.Vector3, deltaTime: number) {
-        // Calculate desired position behind the car
-        const offset = this.cameraOffset.clone();
-        offset.applyQuaternion(carRotation);
-        
-        const desiredPosition = carPosition.clone().add(offset);
-        
-        // Add velocity-based offset for more dynamic feel
-        const velocityOffset = carVelocity.clone().multiplyScalar(-0.1);
-        desiredPosition.add(velocityOffset);
-        
-        // Smooth camera movement
-        this.camera.position.lerp(desiredPosition, this.smoothness);
-        
-        // Look at point ahead of the car
-        const lookAt = this.lookAtOffset.clone();
-        lookAt.applyQuaternion(carRotation);
-        const lookAtPosition = carPosition.clone().add(lookAt);
-        
-        this.camera.lookAt(lookAtPosition);
-    }
-
-    private updateCockpitCamera(carPosition: THREE.Vector3, carRotation: THREE.Quaternion) {
-        // Position camera inside the car
-        const offset = this.cameraOffset.clone();
-        offset.applyQuaternion(carRotation);
-        
-        this.camera.position.copy(carPosition).add(offset);
-        this.camera.setRotationFromQuaternion(carRotation);
-    }
-
-    private updateCinematicCamera(carPosition: THREE.Vector3, carRotation: THREE.Quaternion, deltaTime: number) {
-        // Cinematic camera that orbits around the car
-        const time = Date.now() * 0.001;
-        const radius = 25;
-        
-        const x = carPosition.x + Math.cos(time * 0.5) * radius;
-        const y = carPosition.y + 15;
-        const z = carPosition.z + Math.sin(time * 0.5) * radius;
-        
-        this.camera.position.set(x, y, z);
-        this.camera.lookAt(carPosition);
-    }
-
-    private updateOverheadCamera(carPosition: THREE.Vector3) {
-        // Top-down view
-        this.camera.position.set(carPosition.x, carPosition.y + 50, carPosition.z);
-        this.camera.lookAt(carPosition);
-    }
-
-    addCameraShake(intensity: number) {
-        this.shakeIntensity = Math.max(this.shakeIntensity, intensity);
-    }
-
-    cycleCameraMode() {
-        const modes: CameraMode[] = ['chase', 'cockpit', 'cinematic', 'overhead'];
-        const currentIndex = modes.indexOf(this.currentMode);
-        const nextIndex = (currentIndex + 1) % modes.length;
-        this.setCameraMode(modes[nextIndex]);
+        this.particleSystems = [];
+        this.explosions = [];
+        this.nitroTrails = [];
     }
 }

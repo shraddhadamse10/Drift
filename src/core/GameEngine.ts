@@ -19,19 +19,19 @@ export interface RaceConfig {
 }
 
 export class GameEngine {
-    private scene: THREE.Scene;
-    private renderer: THREE.WebGLRenderer;
+    private scene!: THREE.Scene;
+    private renderer!: THREE.WebGLRenderer;
     private canvas: HTMLCanvasElement;
-    private raceManager: RaceManager;
-    private physicsWorld: PhysicsWorld;
-    private carController: CarController;
-    private trackManager: TrackManager;
-    private cameraController: CameraController;
-    private effectsManager: EffectsManager;
+    private raceManager!: RaceManager;
+    private physicsWorld!: PhysicsWorld;
+    private carController!: CarController;
+    private trackManager!: TrackManager;
+    private cameraController!: CameraController;
+    private effectsManager!: EffectsManager;
     private gameData: GameData;
     private audioManager: AudioManager;
     private inputManager: InputManager;
-    private isRacing = false;
+    private _isRacing = false;
     private animationId: number | null = null;
     private clock = new THREE.Clock();
 
@@ -106,7 +106,7 @@ export class GameEngine {
 
     async startRace(config: RaceConfig) {
         try {
-            this.isRacing = true;
+            this._isRacing = true;
             
             // Load track
             await this.trackManager.loadTrack(config.track);
@@ -134,7 +134,7 @@ export class GameEngine {
 
     private startGameLoop() {
         const gameLoop = () => {
-            if (!this.isRacing) return;
+            if (!this._isRacing) return;
             
             const deltaTime = this.clock.getDelta();
             
@@ -163,7 +163,7 @@ export class GameEngine {
     }
 
     pauseRace() {
-        this.isRacing = false;
+        this._isRacing = false;
         if (this.animationId) {
             cancelAnimationFrame(this.animationId);
         }
@@ -171,7 +171,7 @@ export class GameEngine {
     }
 
     resumeRace() {
-        this.isRacing = true;
+        this._isRacing = true;
         this.startGameLoop();
         this.audioManager.resumeRaceMusic();
     }
@@ -184,7 +184,7 @@ export class GameEngine {
     }
 
     endRace() {
-        this.isRacing = false;
+        this._isRacing = false;
         if (this.animationId) {
             cancelAnimationFrame(this.animationId);
         }
@@ -200,7 +200,7 @@ export class GameEngine {
     }
 
     isRacing(): boolean {
-        return this.isRacing;
+        return this._isRacing;
     }
 
     getScene(): THREE.Scene {
