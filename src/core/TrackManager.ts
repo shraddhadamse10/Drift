@@ -412,8 +412,8 @@ export class TrackManager {
 
     private setupLighting() {
         // Adjust lighting based on time of day
-        const existingLights = this.scene.children.filter(child => child instanceof THREE.Light);
-        existingLights.forEach(light => {
+        const existingLights = this.scene.children.filter((child: THREE.Object3D) => child instanceof THREE.Light);
+        existingLights.forEach((light: THREE.Light) => {
             if (light instanceof THREE.DirectionalLight) {
                 switch (this.currentTrack?.timeOfDay) {
                     case 'Night':

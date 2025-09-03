@@ -11,6 +11,7 @@ export class RaceManager {
     private racePosition = 1;
     private isCountdownActive = false;
     private raceTime = 0;
+    private isRacing = false;
 
     constructor(gameData: GameData, audioManager: AudioManager) {
         this.gameData = gameData;

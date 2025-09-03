@@ -51,9 +51,9 @@ export interface PlayerProgress {
 }
 
 export class GameData {
-    private playerProgress: PlayerProgress;
-    private ownedCars: CarData[];
-    private careerSeasons: SeasonData[];
+    private playerProgress!: PlayerProgress;
+    private ownedCars!: CarData[];
+    private careerSeasons!: SeasonData[];
     private achievements: any[] = [];
 
     constructor() {
