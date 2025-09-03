@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asphalt Racing - High-Speed Thrills</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Loading Screen -->
+        <div id="loading-screen" class="loading-screen">
+            <div class="loading-content">
+                <div class="logo">
+                    <h1>ASPHALT RACING</h1>
+                    <div class="tagline">HIGH-SPEED THRILLS</div>
+                </div>
+                <div class="loading-bar">
+                    <div class="loading-progress"></div>
+                </div>
+                <div class="loading-text">Loading...</div>
+            </div>
+        </div>
+
+        <!-- Main Menu -->
+        <div id="main-menu" class="main-menu hidden">
+            <div class="menu-background"></div>
+            <div class="menu-content">
+                <div class="logo-section">
+                    <h1 class="game-title">ASPHALT RACING</h1>
+                    <div class="subtitle">ULTIMATE RACING EXPERIENCE</div>
+                </div>
+                
+                <div class="menu-buttons">
+                    <button class="menu-btn primary" data-action="career">
+                        <span class="btn-icon">🏆</span>
+                        <span class="btn-text">CAREER</span>
+                    </button>
+                    <button class="menu-btn" data-action="quick-race">
+                        <span class="btn-icon">⚡</span>
+                        <span class="btn-text">QUICK RACE</span>
+                    </button>
+                    <button class="menu-btn" data-action="multiplayer">
+                        <span class="btn-icon">🌐</span>
+                        <span class="btn-text">MULTIPLAYER</span>
+                    </button>
+                    <button class="menu-btn" data-action="garage">
+                        <span class="btn-icon">🚗</span>
+                        <span class="btn-text">GARAGE</span>
+                    </button>
+                    <button class="menu-btn" data-action="settings">
+                        <span class="btn-icon">⚙️</span>
+                        <span class="btn-text">SETTINGS</span>
+                    </button>
+                </div>
+
+                <div class="player-stats">
+                    <div class="stat">
+                        <span class="stat-label">Credits</span>
+                        <span class="stat-value" id="player-credits">50,000</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Tokens</span>
+                        <span class="stat-value" id="player-tokens">100</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">League</span>
+                        <span class="stat-value" id="player-league">Amateur</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Canvas -->
+        <canvas id="game-canvas" class="game-canvas hidden"></canvas>
+
+        <!-- Game UI Overlay -->
+        <div id="game-ui" class="game-ui hidden">
+            <!-- Race HUD -->
+            <div class="race-hud">
+                <div class="top-hud">
+                    <div class="position-display">
+                        <span class="position" id="race-position">1</span>
+                        <span class="total-racers">/8</span>
+                    </div>
+                    <div class="lap-counter">
+                        <span class="current-lap" id="current-lap">1</span>
+                        <span>/</span>
+                        <span class="total-laps" id="total-laps">3</span>
+                    </div>
+                    <div class="race-time" id="race-time">00:00.000</div>
+                </div>
+
+                <div class="bottom-hud">
+                    <div class="speed-display">
+                        <div class="speed-value" id="speed-value">0</div>
+                        <div class="speed-unit">KM/H</div>
+                    </div>
+                    
+                    <div class="nitro-container">
+                        <div class="nitro-bar">
+                            <div class="nitro-fill" id="nitro-fill"></div>
+                        </div>
+                        <div class="nitro-label">NITRO</div>
+                    </div>
+
+                    <div class="minimap">
+                        <canvas id="minimap-canvas" width="120" height="120"></canvas>
+                    </div>
+                </div>
+
+                <!-- Stunt Display -->
+                <div class="stunt-display" id="stunt-display">
+                    <div class="stunt-text"></div>
+                    <div class="stunt-points"></div>
+                </div>
+            </div>
+
+            <!-- Mobile Controls -->
+            <div class="mobile-controls" id="mobile-controls">
+                <div class="steering-wheel" id="steering-wheel">
+                    <div class="wheel-center"></div>
+                </div>
+                <div class="action-buttons">
+                    <button class="control-btn brake-btn" id="brake-btn">BRAKE</button>
+                    <button class="control-btn nitro-btn" id="nitro-btn">NITRO</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Garage Screen -->
+        <div id="garage-screen" class="garage-screen hidden">
+            <div class="garage-header">
+                <button class="back-btn" data-action="back-to-menu">← BACK</button>
+                <h2>GARAGE</h2>
+                <div class="garage-stats">
+                    <span>Cars Owned: <span id="cars-owned">3</span></span>
+                </div>
+            </div>
+
+            <div class="garage-content">
+                <div class="car-showcase">
+                    <div class="car-display" id="car-display">
+                        <!-- 3D car model will be rendered here -->
+                    </div>
+                    <div class="car-info">
+                        <h3 class="car-name" id="selected-car-name">McLaren P1</h3>
+                        <div class="car-class" id="selected-car-class">S-Class</div>
+                        <div class="car-stats">
+                            <div class="stat-bar">
+                                <label>Top Speed</label>
+                                <div class="bar"><div class="fill" style="width: 95%"></div></div>
+                            </div>
+                            <div class="stat-bar">
+                                <label>Acceleration</label>
+                                <div class="bar"><div class="fill" style="width: 88%"></div></div>
+                            </div>
+                            <div class="stat-bar">
+                                <label>Handling</label>
+                                <div class="bar"><div class="fill" style="width: 82%"></div></div>
+                            </div>
+                            <div class="stat-bar">
+                                <label>Nitro</label>
+                                <div class="bar"><div class="fill" style="width: 90%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="car-grid" id="car-grid">
+                    <!-- Car selection grid will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Career Screen -->
+        <div id="career-screen" class="career-screen hidden">
+            <div class="career-header">
+                <button class="back-btn" data-action="back-to-menu">← BACK</button>
+                <h2>CAREER MODE</h2>
+                <div class="career-progress">
+                    <span>Season 1: Nevada</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 60%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="career-content">
+                <div class="season-map">
+                    <div class="race-nodes" id="race-nodes">
+                        <!-- Race nodes will be generated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Race Results -->
+        <div id="race-results" class="race-results hidden">
+            <div class="results-content">
+                <div class="results-header">
+                    <h2 id="results-title">RACE COMPLETE</h2>
+                    <div class="stars-earned" id="stars-earned">
+                        <span class="star">⭐</span>
+                        <span class="star">⭐</span>
+                        <span class="star">⭐</span>
+                    </div>
+                </div>
+
+                <div class="results-stats">
+                    <div class="stat">
+                        <label>Position</label>
+                        <span id="final-position">1st</span>
+                    </div>
+                    <div class="stat">
+                        <label>Best Lap</label>
+                        <span id="best-lap">01:23.456</span>
+                    </div>
+                    <div class="stat">
+                        <label>Credits Earned</label>
+                        <span id="credits-earned">+2,500</span>
+                    </div>
+                </div>
+
+                <div class="results-actions">
+                    <button class="results-btn" data-action="retry">RETRY</button>
+                    <button class="results-btn primary" data-action="continue">CONTINUE</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pause Menu -->
+        <div id="pause-menu" class="pause-menu hidden">
+            <div class="pause-content">
+                <h2>PAUSED</h2>
+                <div class="pause-buttons">
+                    <button class="pause-btn" data-action="resume">RESUME</button>
+                    <button class="pause-btn" data-action="restart">RESTART</button>
+                    <button class="pause-btn" data-action="quit">QUIT TO MENU</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
